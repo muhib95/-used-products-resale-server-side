@@ -20,6 +20,7 @@ async function run() {
         const usersCollection=client.db('usedTvBuyAndSell').collection('users');
         const categoryCollection=client.db('usedTvBuyAndSell').collection('category');
         const productsCollection=client.db('usedTvBuyAndSell').collection('products');
+        const bookingCollection=client.db('usedTvBuyAndSell').collection('booking');
 
 
 
@@ -43,6 +44,12 @@ async function run() {
             const query={brandId:id};
             const result=await productsCollection.find(query).toArray();
             res.send(result);
+      
+          })
+          app.post('/booking',async(req,res)=>{
+            const booked=req.body;
+            const result=await bookingCollection.insertOne(booked);
+            res.send(result)
       
           })
 
