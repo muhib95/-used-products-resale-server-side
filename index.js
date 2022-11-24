@@ -19,6 +19,7 @@ async function run() {
     try{
         const usersCollection=client.db('usedTvBuyAndSell').collection('users');
         const categoryCollection=client.db('usedTvBuyAndSell').collection('category');
+        const productsCollection=client.db('usedTvBuyAndSell').collection('products');
 
 
 
@@ -33,6 +34,14 @@ async function run() {
           app.get('/category', async(req,res)=>{
             const query={};
             const result=await categoryCollection.find(query).toArray();
+            res.send(result);
+      
+          })
+          app.get('/category/:id', async(req,res)=>{
+            const id=req.params.id;
+            
+            const query={brandId:id};
+            const result=await productsCollection.find(query).toArray();
             res.send(result);
       
           })
