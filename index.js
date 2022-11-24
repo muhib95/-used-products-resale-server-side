@@ -38,14 +38,26 @@ async function run() {
             res.send(result);
       
           })
-          app.get('/category/:id', async(req,res)=>{
-            const id=req.params.id;
+          // app.get('/category/:id', async(req,res)=>{
+          //   const id=req.params.id;
             
-            const query={brandId:id};
-            const result=await productsCollection.find(query).toArray();
-            res.send(result);
+          //   const query={ brandId:id};
+          //   const result=await productsCollection.find(query).toArray();
+          //   res.send(result);
+      
+          // })
+
+          app.get('/products/:brand',async(req,res)=>{
+            const brand=req.params.brand;
+           
+            const query={brand:brand}
+            const products=await productsCollection.find(query).toArray();
+            res.send(products)
       
           })
+
+
+        
           app.post('/booking',async(req,res)=>{
             const booked=req.body;
             const result=await bookingCollection.insertOne(booked);
