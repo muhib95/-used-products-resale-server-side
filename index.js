@@ -38,7 +38,21 @@ async function run() {
         const productsCollection=client.db('usedTvBuyAndSell').collection('products');
         const bookingCollection=client.db('usedTvBuyAndSell').collection('booking');
 
+//JWT login register
 
+app.get('/jwt',async(req,res)=>{
+
+  const email=req.query.email;
+  // console.log(em);
+  const query={userEmail:email}
+  const user=await usersCollection.findOne(query);
+  // console.log(user);
+  if(user){
+    const token=jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRETE,{expiresIn:'7days'});
+    return res.send({token:token});
+  }
+  res.status(403).send({token:''})
+})
 
 
 // jwt token google
