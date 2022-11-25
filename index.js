@@ -72,6 +72,33 @@ app.get('/jwt',async(req,res)=>{
       
           })
 
+
+          app.put('/users',async(req,res)=>{
+
+              const userObj=req.body;
+
+              const filter={userEmail:userObj.userEmail}
+            const options = { upsert: true };
+            const updateDoc = {
+              $set: {
+              
+                  userName:userObj.userName,
+                  userPhoto:userObj.userPhoto,
+                  userRoles:userObj.userRoles,
+                  varified:false
+
+
+
+              }
+            };
+            const result=await usersCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
+
+      
+          })
+
+      
+
           app.get('/category', async(req,res)=>{
             const query={};
             const result=await categoryCollection.find(query).toArray();
