@@ -60,6 +60,18 @@ async function run() {
         
           app.post('/booking',async(req,res)=>{
             const booked=req.body;
+
+            const query={productId:booked.productId,
+              email:booked.email
+
+            };
+            const alreadyHave=await bookingCollection.find(query).toArray();
+            if(alreadyHave.length){
+              const message="You already order"
+              return res.send({acknowledged:false,message})
+
+            }
+            
             const result=await bookingCollection.insertOne(booked);
             res.send(result)
       
