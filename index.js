@@ -3,6 +3,7 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT||5000
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 
@@ -13,7 +14,22 @@ app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.c8jqjnz.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+function varifyJWT(req,res,next){
+  const authHeader=req.headers.authorization;
+  if(!authHeader){
+    return res.status(401).send({message:'unauthorize'});
+  }
+  const token=authHeader.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRETE, function(err, decoded) {
+    if(err){
+      return res.status(401).send({message:'unauthorize'});
+    }
+    req.decoded=decoded;
+    next();
+  });
 
+
+}
 
 async function run() {
     try{
@@ -23,6 +39,16 @@ async function run() {
         const bookingCollection=client.db('usedTvBuyAndSell').collection('booking');
 
 
+
+
+// jwt token google
+
+          app.post('/jwt',(req,res)=>{
+            const user=req.body;
+            const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRETE,{expiresIn:'7days'})
+            res.send({token})
+
+          }) 
 
 
         app.post('/users',async(req,res)=>{
@@ -78,7 +104,7 @@ async function run() {
           })
 
 
-          app.get('/orders',async(req,res)=>{
+          app.get('/orders',varifyJWT, async(req,res)=>{
             const userEmail=req.query.email;
             // console.log(userEmail);
             const query={email:userEmail};
