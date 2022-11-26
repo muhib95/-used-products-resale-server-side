@@ -167,6 +167,20 @@ app.get('/jwt',async(req,res)=>{
        
            })
 
+           app.put('/seller',async(req,res)=>{
+             const sellerObj=req.body;
+            const filter={userEmail:sellerObj.email}
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: {
+             varified:true
+
+            }
+          };
+          const result=await usersCollection.updateOne(filter, updateDoc, options);
+          res.send(result);
+        })
+
 
 
 
