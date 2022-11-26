@@ -123,6 +123,17 @@ app.get('/jwt',async(req,res)=>{
       
           })
 
+          app.post('/addProduct',async(req,res)=>{
+            const product=req.body;
+            // console.log(product);
+            const result=await productsCollection.insertOne(product);
+            res.send(result)
+
+
+          })
+
+
+
 
         
           app.post('/booking',async(req,res)=>{
