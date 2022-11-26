@@ -154,6 +154,15 @@ app.get('/jwt',async(req,res)=>{
       
           })
 
+          app.get('/dashboard/allseller', async(req,res)=>{
+           const filter={userRoles:"Seller"};
+            const bookings=await usersCollection.find(filter).toArray();
+            res.send(bookings);
+      
+          })
+
+
+
 
 
     }
