@@ -37,6 +37,7 @@ async function run() {
         const categoryCollection=client.db('usedTvBuyAndSell').collection('category');
         const productsCollection=client.db('usedTvBuyAndSell').collection('products');
         const bookingCollection=client.db('usedTvBuyAndSell').collection('booking');
+        const reportItemsCollection=client.db('usedTvBuyAndSell').collection('reportItem');
 
 //JWT login register
 
@@ -245,6 +246,12 @@ app.get('/jwt',async(req,res)=>{
        
            })
 
+           app.get('/dashboard/reporttoadmin',async(req,res)=>{
+            const filter={};
+            const reportProduct=await reportItemsCollection.find(filter).toArray();
+            res.send(reportProduct);
+           })
+
            app.put('/seller',async(req,res)=>{
              const sellerObj=req.body;
             const filter={userEmail:sellerObj.email}
@@ -266,6 +273,16 @@ app.get('/jwt',async(req,res)=>{
           const result=await usersCollection.findOne(filter); 
           res.send(result); 
           
+
+             })
+
+             app.post('/reporttoadmin/',async(req,res)=>{
+              const reporteItem=req.body;
+              // console.log(reporteItem);
+              const result=await reportItemsCollection.insertOne(reporteItem);
+              res.send(result);
+              
+
 
              })
 
