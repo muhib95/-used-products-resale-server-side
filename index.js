@@ -276,7 +276,7 @@ app.get('/jwt',async(req,res)=>{
 
              })
 
-             app.post('/reporttoadmin/',async(req,res)=>{
+             app.post('/reporttoadmin',async(req,res)=>{
               const reporteItem=req.body;
               // console.log(reporteItem);
               const result=await reportItemsCollection.insertOne(reporteItem);
@@ -285,6 +285,15 @@ app.get('/jwt',async(req,res)=>{
 
 
              })
+
+             app.delete('/reporttoadminproduct/:id',varifyJWT, async(req,res)=>{
+              const id=req.params.id;
+              // console.log(userEmail);
+              const query={ _id:ObjectId(id)};
+              const result=await productsCollection.deleteOne(query);
+              res.send(result);
+        
+            })
 
 
 
