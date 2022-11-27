@@ -123,6 +123,9 @@ app.get('/jwt',async(req,res)=>{
       
           })
 
+          
+         
+
           app.post('/addProduct',async(req,res)=>{
             const product=req.body;
             // console.log(product);
@@ -162,6 +165,15 @@ app.get('/jwt',async(req,res)=>{
             const query={email:userEmail};
             const bookings=await bookingCollection.find(query).toArray();
             res.send(bookings);
+      
+          })
+
+          app.get('/myproducts', async(req,res)=>{
+            const userEmail=req.query.email;
+            // console.log(userEmail);
+            const query={sellerEmail:userEmail};
+            const myProducts=await productsCollection.find(query).project({name:1,resalePrice:1}).toArray();
+            res.send(myProducts);
       
           })
 
