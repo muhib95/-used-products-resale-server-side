@@ -135,6 +135,24 @@ app.get('/jwt',async(req,res)=>{
 
           })
 
+          app.put('/varifiedSellerProduct', varifyJWT,async(req,res)=>{
+
+            const userObj=req.body;
+            // console.log(userObj);
+
+            const filter={sellerEmail:userObj.email}
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: {
+                    verified:true
+            }
+          };
+          const result=await productsCollection.updateMany(filter, updateDoc, options);
+          res.send(result)
+
+    
+        })
+
 
 
 
@@ -177,7 +195,7 @@ app.get('/jwt',async(req,res)=>{
       
           })
 
-          app.delete('/myproducts/:id', async(req,res)=>{
+          app.delete('/myproducts/:id',varifyJWT, async(req,res)=>{
             const id=req.params.id;
             // console.log(userEmail);
             const query={ _id:ObjectId(id)};
