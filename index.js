@@ -202,6 +202,14 @@ app.get('/jwt',async(req,res)=>{
        })
 
 
+       app.get('/advertisement',async(req,res)=>{
+        const filter={add:true};
+        const results=await productsCollection.find(filter).toArray();
+        res.send(results);
+
+       })
+
+
       
 
           
