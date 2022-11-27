@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT||5000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
@@ -176,6 +176,35 @@ app.get('/jwt',async(req,res)=>{
             res.send(myProducts);
       
           })
+
+          app.delete('/myproducts/:id', async(req,res)=>{
+            const id=req.params.id;
+            // console.log(userEmail);
+            const query={ _id:ObjectId(id)};
+            const result=await productsCollection.deleteOne(query);
+            res.send(result);
+      
+          })
+
+          app.put('/advertise',async(req,res)=>{
+            const productInfo=req.body;
+            // console.log(productInfo);
+           const filter={_id:ObjectId(productInfo.id)}
+         const options = { upsert: true };
+         const updateDoc = {
+           $set: {
+            add:true
+
+           }
+         };
+         const result=await productsCollection.updateOne(filter, updateDoc, options);
+         res.send(result);
+       })
+
+
+      
+
+          
 
           app.get('/dashboard/allseller', async(req,res)=>{
            const filter={userRoles:"Seller"};
