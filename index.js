@@ -172,7 +172,7 @@ app.get('/jwt',async(req,res)=>{
             const userEmail=req.query.email;
             // console.log(userEmail);
             const query={sellerEmail:userEmail};
-            const myProducts=await productsCollection.find(query).project({name:1,resalePrice:1}).toArray();
+            const myProducts=await productsCollection.find(query).project({name:1,resalePrice:1,add:1}).toArray();
             res.send(myProducts);
       
           })
