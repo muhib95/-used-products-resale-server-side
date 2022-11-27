@@ -259,6 +259,16 @@ app.get('/jwt',async(req,res)=>{
           res.send(result);
         })
 
+        app.get('/usercheck',async(req,res)=>{
+          const email=req.query.email;
+// console.log(email)
+          const filter={userEmail:email};
+          const result=await usersCollection.findOne(filter); 
+          res.send(result); 
+          
+
+             })
+
 
 
 
