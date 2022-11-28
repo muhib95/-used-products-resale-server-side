@@ -177,6 +177,41 @@ app.get('/jwt',async(req,res)=>{
       
           })
 
+          app.get('/users/admin/:email',async(req,res)=>{
+              const email=req.params.email;
+              
+              // console.log(email);
+              const query={userEmail:email};
+              const user=await usersCollection.findOne(query);
+              // console.log(user);
+              res.send({isAdmin:user?.userRoles==="admin"})
+        
+
+          })
+
+          app.get('/users/seller/:email',async(req,res)=>{
+            const email=req.params.email;
+            // console.log(email);
+            const query={userEmail:email};
+            const user=await usersCollection.findOne(query);
+      
+            res.send({isSeller:user?.userRoles==="Seller"});
+            
+
+
+        })
+        app.get('/users/buyer/:email',async(req,res)=>{
+          const email=req.params.email;
+          // console.log(email);
+          const query={userEmail:email};
+          
+          const user=await usersCollection.findOne(query);
+        
+          
+          res.send({isBuyer:user?.userRoles==="user"});
+
+      })
+
 
           app.get('/orders',varifyJWT, async(req,res)=>{
             const userEmail=req.query.email;
