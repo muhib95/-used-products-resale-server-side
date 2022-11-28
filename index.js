@@ -5,7 +5,7 @@ const port = process.env.PORT||5000
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
-
+const stripe = require("stripe")(process.env.STRIP_SECRET);
 
 
 app.use(cors())
@@ -38,7 +38,38 @@ async function run() {
         const productsCollection=client.db('usedTvBuyAndSell').collection('products');
         const bookingCollection=client.db('usedTvBuyAndSell').collection('booking');
         const reportItemsCollection=client.db('usedTvBuyAndSell').collection('reportItem');
+        const paymentCollection=client.db('usedTvBuyAndSell').collection('payment');
 
+
+
+
+
+        app.post("/create-payment-intent", async (req, res) => {
+          const checked=req.body;
+          const price=checked.resalePrice;
+          const amount=price*100;
+          const paymentIntent = await stripe.paymentIntents.create({
+            currency: "usd",
+            amount:amount,
+            "payment_method_types": [
+              "card"
+            ]
+            
+          })
+          res.send({
+            clientSecret: paymentIntent.client_secret,
+          });
+
+        
+        });
+
+        app.post('/paymentstore',async(req,res)=>{
+          const payment=req.body;
+          const result=await paymentCollection.insertOne(payment);
+            res.send(result)
+
+
+        })
 //JWT login register
 
 app.get('/jwt',async(req,res)=>{
@@ -124,7 +155,7 @@ app.get('/jwt',async(req,res)=>{
       
           })
 
-          
+  
          
 
           app.post('/addProduct',async(req,res)=>{
@@ -176,6 +207,15 @@ app.get('/jwt',async(req,res)=>{
             res.send(result)
       
           })
+
+app.get('/dashboard/payment/:id',async(req,res)=>{
+  const id=req.params.id;
+  const filter={_id:ObjectId(id)};
+  const result=await productsCollection.findOne(filter);
+  res.send(result);
+
+})
+
 
           app.get('/users/admin/:email',async(req,res)=>{
               const email=req.params.email;
